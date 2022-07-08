@@ -4,8 +4,22 @@ import java.math.BigDecimal;
 
 import br.com.alura.loja.orcamento.Orcamento;
 
-public interface Imposto {
+public abstract class Imposto {
 
-	BigDecimal calcular(Orcamento orcamento);
+	private Imposto outroImposto;
+
+	public Imposto(Imposto outroImposto){
+		this.outroImposto = outroImposto;
+	}
+
+	protected abstract BigDecimal realizarCalculo(Orcamento orcamento);
+
+	public BigDecimal calcular(Orcamento orcamento) {
+		BigDecimal valorImposto = realizarCalculo(orcamento);
+		if (outroImposto != null) {
+			valorImposto.add(outroImposto.realizarCalculo(orcamento));
+		}
+		return valorImposto;
+	}
 
 }
